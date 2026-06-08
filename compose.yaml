@@ -1,0 +1,18 @@
+services:
+  robot-sim:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      platforms:
+        - linux/arm64
+    image: guinsoo/robot-sim:jazzy-arm64
+    container_name: guinsoo-robot-sim
+    environment:
+      ROS_DOMAIN_ID: "0"
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      FOXGLOVE_PORT: "8765"
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./workspace:/workspace/robot_ws
+    command: ["bash"]
