@@ -1,12 +1,32 @@
-# Guinsoo Mac 机器人仿真平台
+# Guinsoo 跨平台机器人仿真平台
 
-这是 Mac 全栈机器人仿真算法验证平台的工具链环境 MVP。第一版使用 Qt/C++ 桌面 GUI 管理 Docker Desktop 中的 Ubuntu 24.04 ARM64 容器，容器内提供 ROS 2 Jazzy、Gazebo Harmonic、MoveIt 2 Jazzy 和 Foxglove Bridge。
+这是机器人仿真算法验证平台的工具链环境 MVP，**兼容 macOS 与 Ubuntu 22.04 LTS 两种宿主机**。第一版使用 Qt/C++ 桌面 GUI 管理 Docker 中的 Linux 工具链容器（默认 Mac 上为 Ubuntu 24.04 ARM64），容器内提供 ROS 2 Jazzy、Gazebo Harmonic、MoveIt 2 Jazzy 和 Foxglove Bridge。
+
+设计说明见 [`docs/superpowers/specs/2026-06-08-mac-robot-sim-toolchain-mvp-design.md`](docs/superpowers/specs/2026-06-08-mac-robot-sim-toolchain-mvp-design.md)。
+
+## 宿主机要求
+
+| 宿主机 | Docker | 默认容器架构 |
+| --- | --- | --- |
+| macOS（Apple Silicon） | Docker Desktop | `linux/arm64` |
+| Ubuntu 22.04 LTS | Docker Engine + Compose | `linux/amd64` |
+
+Ubuntu 宿主机需将当前用户加入 `docker` 组并保证 `docker compose` 可用。容器内 ROS/Gazebo 版本与宿主机 22.04 无绑定关系。
 
 ## 本地构建 Qt 应用
+
+**macOS：**
 
 ```bash
 ./scripts/build-mac-app.sh
 ./scripts/run-mac-app.sh
+```
+
+**Ubuntu 22.04（Linux 构建脚本待与 Host Profile 对齐；当前可先使用 Docker CLI）：**
+
+```bash
+# GUI Linux 构建入口将在实现阶段补充；工具链容器与 Mac 共用 docker-build / docker-run 脚本
+./scripts/docker-build-toolchain.sh
 ```
 
 ## Docker 工具链
@@ -53,4 +73,4 @@ docker run --rm -it \
 ## 当前范围
 
 - 已实现：中文设计文档、Qt/C++ 五页 GUI 骨架、配置合并、诊断规则、Docker 命令预览、Foxglove advertise 消息解析、Docker 工具链文件。
-- 暂缓：完整 Gazebo/RViz GUI 嵌入、rosbag 分析、多 Docker 运行时、Intel Mac、macOS 端 DDS 直连 ROS 2 节点。
+- 暂缓：完整 Gazebo/RViz GUI 嵌入、rosbag 分析、Colima/Podman、Intel Mac 专项、宿主机端 DDS 直连 ROS 2 节点、22.04 以外 Linux 发行版。
